@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.tsbuildinfo
+contact-sheet.jpg
+.npm-cache/
+
+BLACKCHIN_DOCUMENTARY_CONTENT_AND_DESIGN.md
+MASTER_PROMPT_BLACKCHIN_2D_CODEX.md

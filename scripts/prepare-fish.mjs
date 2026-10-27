@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import convert from 'heic-convert';
+import sharp from 'sharp';
+const original='media/FullSizeRender(10).heic';
+const decoded=Buffer.from(await convert({buffer:fs.readFileSync(original),format:'JPEG',quality:1}));
+const meta=await sharp(decoded).metadata();
+await sharp(decoded).rotate().resize({width:1600,withoutEnlargement:true}).webp({quality:90}).toFile('public/media/fish-photo.webp');
+await sharp(decoded).rotate().resize({width:720,withoutEnlargement:true}).webp({quality:85}).toFile('public/media/fish-photo-small.webp');
+const file='src/content/media.ts';const existing=JSON.parse(fs.readFileSync(file,'utf8').replace('export const media = ','').replace(/;\s*$/,''));
+const asset={id:'fish-photo',original,url:'/media/fish-photo.webp',fullUrl:'/media/fish-photo.webp',width:meta.width,height:meta.height,alt:'ภาพถ่ายปลาระยะใกล้ เห็นลำตัว ครีบ และคาง',caption:'ภาพปลาระยะใกล้จากการสำรวจภาคสนาม',sourceIds:[],mediaRightsStatus:'supplied-check-rights',evidenceType:'context',publishedAt:null,eventDate:null,verifiedAsOf:'2026-10-27'};
+fs.writeFileSync(file,'export const media = '+JSON.stringify([...existing.filter(a=>a.id!=='fish-photo'),asset],null,2)+';');
+console.log('Prepared genuine photograph:',original,meta.width,meta.height);
