@@ -1,0 +1,20 @@
+import {it,expect,vi,afterEach} from 'vitest';
+import {render,screen,fireEvent,act,cleanup} from '@testing-library/react';
+import {FieldGallery} from './FieldGallery';
+afterEach(()=>{cleanup();vi.useRealTimers();vi.unstubAllGlobals()});
+it('wraps in both directions and automatically loops until paused',()=>{
+ vi.useFakeTimers();
+ vi.stubGlobal('IntersectionObserver',class{constructor(private callback:IntersectionObserverCallback){} observe(){this.callback([{isIntersecting:true}] as IntersectionObserverEntry[],this as unknown as IntersectionObserver)} disconnect(){}});
+ render(<FieldGallery renderFigure={id=><p data-testid="slide">{id}</p>}/>);
+ fireEvent.click(screen.getByRole('button',{name:'ภาพก่อนหน้า'}));
+ expect(screen.getByTestId('slide').textContent).toBe('field-map');
+ fireEvent.click(screen.getByRole('button',{name:'ภาพถัดไป'}));
+ expect(screen.getByTestId('slide').textContent).toBe('field-people');
+ fireEvent.click(screen.getByRole('button',{name:'เล่นแกลเลอรีอัตโนมัติ'}));
+ act(()=>vi.advanceTimersByTime(5000));
+ expect(screen.getByTestId('slide').textContent).toBe('field-net');
+ fireEvent.focus(screen.getByRole('button',{name:'หยุดแกลเลอรี'}));
+ fireEvent.click(screen.getByRole('button',{name:'หยุดแกลเลอรี'}));
+ act(()=>vi.advanceTimersByTime(10000));
+ expect(screen.getByTestId('slide').textContent).toBe('field-net');
+});

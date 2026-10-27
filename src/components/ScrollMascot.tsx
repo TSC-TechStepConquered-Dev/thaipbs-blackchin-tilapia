@@ -16,7 +16,9 @@ export function ScrollMascot(){
     const start=document.getElementById('chapter-01')?.getBoundingClientRect();
     const end=document.getElementById('chapter-07')?.getBoundingClientRect();
     const modal=!!document.querySelector('dialog[open]');
-    const visible=!!start&&!!end&&start.top<innerHeight*.65&&end.top>innerHeight*.3&&!modal;
+    const atlas=document.querySelector('.atlas')?.getBoundingClientRect();
+    const inAtlas=!!atlas&&atlas.top<innerHeight*.7&&atlas.bottom>innerHeight*.3;
+    const visible=!!start&&!!end&&start.top<innerHeight*.65&&end.top>innerHeight*.3&&!modal&&!inAtlas;
     element.style.visibility=visible?'visible':'hidden';
     const progress=window.scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight);
     const mobile=innerWidth<760;
